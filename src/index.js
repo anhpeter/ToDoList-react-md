@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Main from './to_do_list/main';
+import MainComponent from './to_do_list/main.component';
 
 ReactDOM.render(
     <React.StrictMode>
-        <Main></Main>
+        <MainComponent></MainComponent>
     </React.StrictMode>,
     document.getElementById('root')
 );
