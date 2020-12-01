@@ -9,12 +9,16 @@ class MainComponent extends React.Component {
 
     constructor(props) {
         super(props);
+        let $this = this;
         this.state = {
             isFormOpening: false,
             task: null,
 
             // tasks
             taskArr: this.getList(),
+            get displayTaskArr() {
+                return $this.getDisplayTaskArr([...this.taskArr]);
+            },
 
             // params
             toolbarParams: {
@@ -27,8 +31,24 @@ class MainComponent extends React.Component {
         }
     }
 
+    getDisplayTaskArr = (taskArr) => {
+        let toolbarParams = this.state.toolbarParams;
+        if (toolbarParams.search.trim() !== '' || toolbarParams.filter.status !== 'all') {
+            taskArr = taskArr.filter((item) => {
+                return (
+                    item.title.indexOf(toolbarParams.search) >= 0 &&
+                    (item.status === toolbarParams.filter.status || toolbarParams.filter.status === 'all')
+                );
+            })
+        }
+        return taskArr;
+    }
+
+    setDisplayTaskArr = ()=>{
+        this.setState({displayTaskArr: this.getDisplayTaskArr(this.state.taskArr)});
+    }
+
     onTaskStatusChange = (task) => {
-        console.log(task);
         let index = this.getTaskIndex(task);
         let taskArr = [...this.state.taskArr];
         task.status = (task.status === 'active') ? 'hidden' : 'active';
@@ -39,7 +59,6 @@ class MainComponent extends React.Component {
     }
 
     printList = () => {
-        console.log(this.state.taskArr);
     }
 
     getList() {
@@ -78,6 +97,7 @@ class MainComponent extends React.Component {
         taskArr.splice(index, 1);
         this.setState({ taskArr, }, () => {
             this.saveList();
+            this.setDisplayTaskArr();
         })
         if (this.state.isFormOpening && this.state.task?.id === task.id) {
             this.setState({ isFormOpening: false, task: null, })
@@ -105,6 +125,7 @@ class MainComponent extends React.Component {
         taskArr.unshift(task);
         this.setState({ taskArr, }, () => {
             this.saveList();
+            this.setDisplayTaskArr();
         })
     }
 
@@ -116,15 +137,21 @@ class MainComponent extends React.Component {
         taskArr.splice(index, 1, task);
         this.setState({ taskArr, }, () => {
             this.saveList();
+            this.setDisplayTaskArr();
         })
     }
 
     onToolbarParamsChange = (params) => {
-        this.setState({ toolbarParams: params })
+        this.setState({
+            toolbarParams: params
+        }, () => {
+            this.setDisplayTaskArr();
+        })
     }
 
     // RENDER
     render() {
+        console.log('render');
         return (
             <div className="mai-wrapper">
                 <div className="container">
@@ -167,8 +194,8 @@ class MainComponent extends React.Component {
                             {/* LIST */}
                             <div className={(this.state.isFormOpening) ? "col-lg-8" : "col-lg-12"}>
                                 <TaskList
-                                    key={Date.now()}
-                                    taskArr={this.state.taskArr}
+                                    //key={Date.now()}
+                                    taskArr={this.state.displayTaskArr}
                                     toolbarParams={this.state.toolbarParams}
                                     onDeleteTaskClick={this.onDeleteTaskClick}
                                     onEditTaskClick={this.onEditTaskClick}

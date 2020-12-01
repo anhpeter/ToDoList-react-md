@@ -3,31 +3,9 @@ import TaskComponent from '../task.component/task.component';
 
 class TaskListComponent extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            displayTaskArr: [],
-        }
-        this.state.displayTaskArr = this.getDisplayTaskArr();
-    }
-
-    getDisplayTaskArr = () => {
-        let taskArr = [...this.props.taskArr];
-        let toolbarParams = this.props.toolbarParams;
-        if (toolbarParams.search.trim() !== '' || toolbarParams.filter.status !== 'all') {
-            taskArr = taskArr.filter((item) => {
-                return (
-                    item.title.indexOf(toolbarParams.search) >= 0 &&
-                    (item.status === toolbarParams.filter.status || toolbarParams.filter.status === 'all')
-                );
-            })
-        } return taskArr;
-    }
-
-
     // TASK HTML
     getTaskArrHtml() {
-        let htmlArr = this.state.displayTaskArr
+        let htmlArr = this.props.taskArr
             .map((task, index) => {
                 return <TaskComponent
                     key={task.id}
@@ -44,14 +22,15 @@ class TaskListComponent extends Component {
 
     getEmptyMsg() {
         return (
-            <tr><td colSpan="1000"><div className="alert alert-info" > You do not have any task, yet! </div></td></tr>
+            <tr><td colSpan="1000"><div className="alert alert-info text-center" > You do not have any task, yet! </div></td></tr>
         )
     }
 
     render() {
+        console.log(this.props)
         return (
             <div className="task-list-wrapper">
-                <table className="table table-stripped">
+                <table className="table table-striped">
                     <thead >
                         <tr>
                             <th>#</th>
@@ -62,7 +41,7 @@ class TaskListComponent extends Component {
                     </thead>
                     <tbody>
                         {
-                            (this.state.displayTaskArr.length > 0)
+                            (this.props.taskArr?.length > 0)
                                 ? this.getTaskArrHtml()
                                 : this.getEmptyMsg()
                         }
