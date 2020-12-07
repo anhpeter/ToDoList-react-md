@@ -4,6 +4,11 @@ import FormComponent from "./components/form.component/form.component";
 import TitleComponent from "./components/title.component/title.component";
 import React from 'react';
 import Cookie from 'js-cookie';
+import axios from 'axios';
+import {
+    BrowserRouter as Router,
+} from "react-router-dom";
+import './shared/defines/demo'
 
 class MainComponent extends React.Component {
 
@@ -31,6 +36,7 @@ class MainComponent extends React.Component {
         }
     }
 
+
     getDisplayTaskArr = (taskArr) => {
         let toolbarParams = this.state.toolbarParams;
         if (toolbarParams.search.trim() !== '' || toolbarParams.filter.status !== 'all') {
@@ -44,8 +50,8 @@ class MainComponent extends React.Component {
         return taskArr;
     }
 
-    setDisplayTaskArr = ()=>{
-        this.setState({displayTaskArr: this.getDisplayTaskArr(this.state.taskArr)});
+    setDisplayTaskArr = () => {
+        this.setState({ displayTaskArr: this.getDisplayTaskArr(this.state.taskArr) });
     }
 
     onTaskStatusChange = (task) => {
@@ -151,61 +157,62 @@ class MainComponent extends React.Component {
 
     // RENDER
     render() {
-        console.log('render');
         return (
-            <div className="mai-wrapper">
-                <div className="container">
+            <Router>
+                <div className="mai-wrapper">
+                    <div className="container">
 
-                    {/* TITLE */}
-                    <div className="my-4">
-                        <TitleComponent title="My task (ReactJS)"></TitleComponent>
-                    </div>
+                        {/* TITLE */}
+                        <div className="my-4">
+                            <TitleComponent title="My task (ReactJS)"></TitleComponent>
+                        </div>
 
-                    {/* TOOLBAR */}
-                    <div>
-                        <Toolbar
-                            isFormOpening={this.state.isFormOpening}
-                            onAddTaskClick={this.onAddTaskCLick}
-                            onToolbarParamsChange={this.onToolbarParamsChange}
-                        ></Toolbar>
-                    </div>
+                        {/* TOOLBAR */}
+                        <div>
+                            <Toolbar
+                                isFormOpening={this.state.isFormOpening}
+                                onAddTaskClick={this.onAddTaskCLick}
+                                onToolbarParamsChange={this.onToolbarParamsChange}
+                            ></Toolbar>
+                        </div>
 
-                    {/* TASK LIST */}
-                    <div className="my-3">
-                        <div className="row">
+                        {/* TASK LIST */}
+                        <div className="my-3">
+                            <div className="row">
 
-                            {/* FORM */}
+                                {/* FORM */}
 
-                            {
-                                (this.state.isFormOpening)
-                                    ?
-                                    <div className="col-lg-4">
-                                        <FormComponent
-                                            key={this.state.task?.id}
-                                            onFormCancelClick={this.onFormCancelClick}
-                                            onAddTask={this.onAddTask}
-                                            onEditTask={this.onEditTask}
-                                            task={this.state.task}
-                                        ></FormComponent>
-                                    </div>
-                                    : ""
-                            }
+                                {
+                                    (this.state.isFormOpening)
+                                        ?
+                                        <div className="col-lg-4">
+                                            <FormComponent
+                                                key={this.state.task?.id}
+                                                onFormCancelClick={this.onFormCancelClick}
+                                                onAddTask={this.onAddTask}
+                                                onEditTask={this.onEditTask}
+                                                task={this.state.task}
+                                            ></FormComponent>
+                                        </div>
+                                        : ""
+                                }
 
-                            {/* LIST */}
-                            <div className={(this.state.isFormOpening) ? "col-lg-8" : "col-lg-12"}>
-                                <TaskList
-                                    //key={Date.now()}
-                                    taskArr={this.state.displayTaskArr}
-                                    toolbarParams={this.state.toolbarParams}
-                                    onDeleteTaskClick={this.onDeleteTaskClick}
-                                    onEditTaskClick={this.onEditTaskClick}
-                                    onTaskStatusChange={this.onTaskStatusChange}
-                                ></TaskList>
+                                {/* LIST */}
+                                <div className={(this.state.isFormOpening) ? "col-lg-8" : "col-lg-12"}>
+                                    <TaskList
+                                        //key={Date.now()}
+                                        taskArr={this.state.displayTaskArr}
+                                        toolbarParams={this.state.toolbarParams}
+                                        onDeleteTaskClick={this.onDeleteTaskClick}
+                                        onEditTaskClick={this.onEditTaskClick}
+                                        onTaskStatusChange={this.onTaskStatusChange}
+                                    ></TaskList>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </Router>
         )
     }
 }

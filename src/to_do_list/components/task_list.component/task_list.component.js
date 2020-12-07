@@ -27,7 +27,6 @@ class TaskListComponent extends Component {
     }
 
     render() {
-        console.log(this.props)
         return (
             <div className="task-list-wrapper">
                 <table className="table table-striped">
